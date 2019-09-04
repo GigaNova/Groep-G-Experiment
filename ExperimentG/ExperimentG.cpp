@@ -7,7 +7,7 @@
 
 std::string readFileAsString(const std::string& _fileName)
 {
-	std::ifstream ifs("config.json");
+	std::ifstream ifs(_fileName);
 	std::string str((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
 	return str;
 }
