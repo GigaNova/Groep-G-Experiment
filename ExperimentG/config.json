@@ -1,5 +1,25 @@
 {
 	"title" : "Groep G Experiment",
 	"width" : 800,
-	"height" : 600
+	"height" : 600,
+	"boxes" : [
+		{
+			"width" : 300,
+			"height" : 32,
+			"x" : 200,
+			"y" : 100
+		},
+		{
+			"width" : 64,
+			"height" : 64,
+			"x" : 100,
+			"y" : 220
+		},
+		{
+			"width" : 128,
+			"height" : 128,
+			"x" : 100,
+			"y" : 220
+		}
+	]
 }

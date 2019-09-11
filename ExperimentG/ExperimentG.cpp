@@ -4,6 +4,14 @@
 #include "SDL/SDL.h"
 #include <SDL/SDL_image.h>
 #include <json/json.h>
+#include "World.h"
+#include "Box.h"
+
+const int SCREEN_FPS = 60;
+const int SCREEN_TICKS_PER_FRAME = 1000 / SCREEN_FPS;
+
+Uint32 frameStart;
+int frameTime;
 
 std::string readFileAsString(const std::string& _fileName)
 {
@@ -47,16 +55,16 @@ int main(int argc, char* argv[])
 		else
 		{
 			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-			image = IMG_LoadTexture(renderer, "gamma.jpg");
-			SDL_QueryTexture(image, nullptr, nullptr, &width, &height);
+			World experimentWorld;
 
-			SDL_Rect texr; 
-			texr.x = obj["width"].asInt() / 2;
-			texr.y = obj["height"].asInt() / 2;
-			texr.w = width / 2; 
-			texr.h = height / 2;
+			for (const Json::Value& box : obj["boxes"])
+			{
+				experimentWorld.createBox("gamma.jpg", box["x"].asInt(), box["y"].asInt(), box["width"].asInt(), box["height"].asInt(), renderer);
+			}
 
 			while(true) {
+				frameStart = SDL_GetTicks();
+
 				SDL_Event e;
 				if (SDL_PollEvent(&e)) {
 					if (e.type == SDL_QUIT)
@@ -65,9 +73,18 @@ int main(int argc, char* argv[])
 					}
 				}
 
+				experimentWorld.update();
+
+				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 				SDL_RenderClear(renderer);
-				SDL_RenderCopy(renderer, image, nullptr, &texr);
+				experimentWorld.render(renderer);
 				SDL_RenderPresent(renderer);
+
+				frameTime = SDL_GetTicks() - frameStart;
+				if(SCREEN_TICKS_PER_FRAME > frameTime)
+				{
+					SDL_Delay(SCREEN_TICKS_PER_FRAME - frameTime);
+				}
 			}
 		}
 	}
